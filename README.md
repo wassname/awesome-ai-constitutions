@@ -178,7 +178,7 @@ About 23,000 words, written mainly for Claude. Priorities in order: broadly safe
 </td><td>2026-05</td><td>Li, Wichers, Price, Marks, Kutasov</td><td>rules · rules with reasons · values and judgment</td></tr>
 <tr><td colspan="4">
 
-The controlled comparison: the same 5 rules from Claude's constitution written as bare rules, with value explanations, or with more sub-rules (length-matched), plus a general spec and toy "cheese preference" specs. No licence stated. [paper](https://arxiv.org/abs/2605.02087)
+The controlled comparison: the same 5 rules from Claude's constitution written as bare rules, with value explanations, or with more sub-rules (length-matched), plus a general spec and toy "cheese preference" specs. [paper](https://arxiv.org/abs/2605.02087)
 
 </td></tr>
 <tr><td>
