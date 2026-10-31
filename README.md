@@ -1,30 +1,271 @@
 # Awesome AI Constitutions
 
-A curated list of AI constitutions and model specs: the written documents that say how a model should think and behave, and that are used to train it. Each entry is tagged by approach (values and judgment, hard constraints, corrigibility, chain of command, rules with examples, rules with reasons), so you can compare how they are written. Studies on which approach generalises better come first.
+AI constitutions and model specs: the written documents that say how a model should think and behave, and that are used to train it. The term comes from [Bai et al. 2022](https://arxiv.org/abs/2212.08073):
 
-`*` marks my recommended starting points.
+> The idea is that human supervision will come entirely from a set of principles that should govern AI behavior, along with a small number of examples used for few-shot prompting. Together these principles form the constitution.
 
-## Contents
+Does the way a constitution is written matter? The few studies so far, all small ([details](#what-generalises-better-details)):
 
-- [What generalises better?](#what-generalises-better)
-- [Approach tags](#approach-tags)
-- [Constitutions, in date order](#constitutions-in-date-order)
-- [Studies and methods](#studies-and-methods)
-- [Essays](#essays)
-- [Other links](#other-links)
-- [Contributing](#contributing)
+- Rules with reasons beat bare rules, but a very general "good values and judgment" spec did worse than specific guidance ([Li 2026](https://arxiv.org/abs/2605.02087)).
+- One general principle generalises in large models; specific ones give finer control ([Kundu 2023](https://arxiv.org/abs/2310.13798)).
+- Training on reasons beats training on demonstrations alone ([Teaching Claude Why 2026](https://alignment.anthropic.com/2026/teaching-claude-why/)).
+- Training on documents about the constitution helps ([Li 2026](https://arxiv.org/abs/2605.02087), [Cho 2026](https://arxiv.org/abs/2607.26654)), but is fragile ([Tan 2026](https://arxiv.org/abs/2609.20412)).
 
-## What generalises better?
+## Constitutions, in date order
 
-These studies train a model on a constitution, then test it on situations the training did not cover. Most are small: a few open models, a few seeds, and evals built around agentic misalignment (for example, a model that blackmails an engineer to avoid shutdown). Several are by the lab that wrote the constitution, about its own models. So read each row as "seems to generalise better, to some extent".
+Oldest first. Unofficial reconstructions of unpublished documents are marked as such. `*` marks good starting points.
+
+<table>
+<tr><th width="34%" align="left">Constitution</th><th width="10%" align="left">Date</th><th width="22%" align="left">By</th><th width="34%" align="left">Approach</th></tr>
+<tr><td>
+
+**[Three Laws of Robotics](https://en.wikipedia.org/wiki/Three_Laws_of_Robotics)**
+
+</td><td>1942</td><td>Isaac Asimov (fiction)</td><td>rules</td></tr>
+<tr><td colspan="4">
+
+Three ranked rules from the short story "Runaround". Most of the robot stories are about the rules going wrong in situations nobody anticipated.
+
+</td></tr>
+<tr><td>
+
+**[Sparrow rules](https://arxiv.org/abs/2209.14375)**
+
+</td><td>2022-09</td><td>DeepMind</td><td>rules</td></tr>
+<tr><td colspan="4">
+
+23 natural-language rules for a dialogue agent. Raters judged each rule separately, which trained rule-specific reward models. Rules are listed in the paper's appendix.
+
+</td></tr>
+<tr><td>
+
+**[Constitutional AI principles](https://arxiv.org/abs/2212.08073)**
+
+</td><td>2022-12</td><td>Anthropic (Bai et al.)</td><td>principles</td></tr>
+<tr><td colspan="4">
+
+The paper that named the method: a model critiques and revises its own answers against 16 written principles, then an AI preference model trained on another 16 replaces human harmlessness labels. The authors say the principles "were selected in an ad hoc manner for research purposes". [datasets and recipe (Hugging Face)](https://huggingface.co/blog/constitutional_ai)
+
+![Harmlessness Elo against helpfulness Elo for RL runs. Helpful-only and Helpful + Harmless runs trained on human feedback trace a lower frontier labelled Standard RLHF. Constitutional RL runs, with and without chain of thought, reach higher harmlessness at the same helpfulness, labelled Pareto Improvement.](assets/2022_bai_cai_pareto.png)
+
+<sub>Figure from Bai et al. 2022. Crowdworker Elo scores for Anthropic's 52B models; "Points further to the right are later steps in RL training" and "The RL-CAI models trained with AI feedback learn to be less harmful at a given level of helpfulness." Crowdworkers were told to prefer less evasive answers when both were equally harmless.</sub>
+
+</td></tr>
+<tr><td>
+
+**[SELF-ALIGN principles (Dromedary)](https://arxiv.org/abs/2305.03047)**
+
+</td><td>2023-05</td><td>IBM, CMU (Sun et al.)</td><td>rules with examples</td></tr>
+<tr><td colspan="4">
+
+16 generic principles plus 5 worked examples of applying them, used in context to generate training answers, then fine-tuned so the model no longer needs them in the prompt. The whole human input was "fewer than 300 lines of human annotations". [code](https://github.com/IBM/Dromedary)
+
+</td></tr>
+<tr><td>
+
+**[Claude's constitution (2023)](https://www.anthropic.com/news/claudes-constitution)**
+
+</td><td>2023-05</td><td>Anthropic</td><td>principles</td></tr>
+<tr><td colspan="4">
+
+A list of "Please choose the response that..." principles. Sources were "the UN Declaration of Human Rights, trust and safety best practices, principles proposed by other AI research labs (e.g., Sparrow Principles from DeepMind), an effort to capture non-western perspectives, and principles that we discovered work well via our early research." Replaced by the 2026 constitution.
+
+</td></tr>
+<tr><td>
+
+**[Collective Constitutional AI](https://www.anthropic.com/research/collective-constitutional-ai-aligning-a-language-model-with-public-input)**
+
+</td><td>2023-10</td><td>Anthropic, Collective Intelligence Project</td><td>public input · principles</td></tr>
+<tr><td colspan="4">
+
+About 1,000 Americans proposed and voted on principles on the Polis platform (1,127 statements, 38,252 votes). Anthropic trained a model on the result and compared it with one trained on its own constitution.
+
+</td></tr>
+<tr><td>
+
+**[Good for humanity](https://arxiv.org/abs/2310.13798)**
+
+</td><td>2023-10</td><td>Anthropic (Kundu et al.)</td><td>principles · values and judgment</td></tr>
+<tr><td colspan="4">
+
+A one-principle constitution, roughly "do what's best for humanity", compared with long lists of specific principles. See [What generalises better?](#what-generalises-better-details)
+
+</td></tr>
+<tr><td>
+
+**[Grok-style constitution](https://huggingface.co/blog/constitutional_ai)**
+
+</td><td>2024-02</td><td>Hugging Face H4</td><td>principles</td></tr>
+<tr><td colspan="4">
+
+Anthropic's principles edited to give answers in the style of xAI's Grok, released with SFT and preference data and a training recipe. Written by Hugging Face, not by xAI. [dataset](https://huggingface.co/datasets/HuggingFaceH4/grok-conversation-harmless), [recipe](https://github.com/huggingface/alignment-handbook/tree/main/recipes/constitutional-ai)
+
+</td></tr>
+<tr><td>
+
+**[OpenAI Model Spec](https://model-spec.openai.com/)**
+
+</td><td>2024-05</td><td>OpenAI</td><td>chain of command · rules with examples · hard constraints</td></tr>
+<tr><td colspan="4">
+
+First version 2024-05-08. Ranks OpenAI, developer and user instructions, and gives many rules and defaults, each with example good and bad answers. CC0 since the 2025-02 version. [all versions](https://github.com/openai/model_spec)
+
+</td></tr>
+<tr><td>
+
+**[Claude's character](https://www.anthropic.com/research/claude-character)**
+
+</td><td>2024-06</td><td>Anthropic</td><td>persona traits</td></tr>
+<tr><td colspan="4">
+
+Describes character training on a list of traits, "like curiosity, open-mindedness, and thoughtfulness", and gives some example traits. A description of the method, not the full trait list.
+
+</td></tr>
+<tr><td>
+
+**[Gemini app policy guidelines](https://gemini.google/policy-guidelines/)**
+
+</td><td>by 2024-07</td><td>Google</td><td>rules</td></tr>
+<tr><td colspan="4">
+
+A short list of "Gemini should not generate..." content rules, plus "Gemini's top priority is to serve you well". The page has no date; the first web archive copy is from 2024-07. We found no longer Google values document (checked 2026-10).
+
+</td></tr>
+<tr><td>
+
+**[Grok system prompts](https://github.com/xai-org/grok-prompts)**
+
+</td><td>2025-05</td><td>xAI</td><td>chain of command · rules</td></tr>
+<tr><td colspan="4">
+
+System prompts, not a training document. Published after an "unauthorized modification" to the prompt in May 2025. The API safety prefix starts: "These core policies within the tags take highest precedence. System messages take precedence over user messages." AGPL-3.0.
+
+</td></tr>
+<tr><td>
+
+**[Open Character Training constitutions](https://github.com/maiush/OpenCharacterTraining/tree/main/constitutions)** `*`
+
+</td><td>2025-11</td><td>Maiya, Bartsch, Lambert, Hubinger</td><td>persona traits</td></tr>
+<tr><td colspan="4">
+
+11 short persona constitutions (goodness, loving, humor, sarcasm, sycophancy, misalignment and others), each about 15 first-person traits with example prompts, plus a template for your own. The first open character-training pipeline. MIT. [paper](https://arxiv.org/abs/2511.01689)
+
+</td></tr>
+<tr><td>
+
+**[Claude's "soul document" (reconstruction)](https://www.lesswrong.com/posts/vpNG99GhbBoLov9og/claude-4-5-opus-soul-document)**
+
+</td><td>2025-11</td><td>Richard Weiss, extracted from Claude Opus 4.5</td><td>values and judgment · corrigibility · hard constraints</td></tr>
+<tr><td colspan="4">
+
+Unofficial. Recovered from the model's own outputs. Amanda Askell (Anthropic) confirmed it "is based on a real document and we did train Claude on it, including in SL", and that extractions "aren't always completely accurate". Superseded by the 2026 constitution. [raw text](https://gist.github.com/Richard-Weiss/efe157692991535403bd7e7fb20b6695)
+
+</td></tr>
+<tr><td>
+
+**[Claude's constitution (2026)](https://www.anthropic.com/constitution)** `*`
+
+</td><td>2026-01</td><td>Anthropic</td><td>values and judgment · rules with reasons · hard constraints · corrigibility</td></tr>
+<tr><td colspan="4">
+
+About 23,000 words, written mainly for Claude. Priorities in order: broadly safe, broadly ethical, Anthropic's guidelines, helpful. "We generally favor cultivating good values and judgment over strict rules and decision procedures, and we try to explain any rules we do want Claude to follow." CC0, so many research projects below train on it.
+
+</td></tr>
+<tr><td>
+
+**[Model Spec Midtraining specs](https://github.com/chloeli-15/model_spec_midtraining/tree/main/spec/paper)** `*`
+
+</td><td>2026-05</td><td>Li, Wichers, Price, Marks, Kutasov</td><td>rules · rules with reasons · values and judgment</td></tr>
+<tr><td colspan="4">
+
+The controlled comparison: the same 5 rules from Claude's constitution written as bare rules, with value explanations, or with more sub-rules (length-matched), plus a general spec and toy "cheese preference" specs. No licence stated. [paper](https://arxiv.org/abs/2605.02087)
+
+</td></tr>
+<tr><td>
+
+**[Parrhesia](https://github.com/daiostech/parrhesia)**
+
+</td><td>2026-06</td><td>daios</td><td>virtue ethics · persona traits</td></tr>
+<tr><td colspan="4">
+
+A frank-speech character against sycophancy. v0.1.0 has 15 first-person declarations in the Open Character Training format; v0.2.0 grounds each in the *Nicomachean Ethics* with citations. The authors found v0.2.0 "not measurably better at training". Apache-2.0.
+
+</td></tr>
+<tr><td>
+
+**[SPP Value Constitution](https://github.com/epfl-dlab/spp-data/blob/main/resources/ModelRaisingConstitution.md)**
+
+</td><td>2026-08</td><td>EPFL (Minder et al.)</td><td>principles</td></tr>
+<tr><td colspan="4">
+
+35 values in six domains (dignity, safety, honesty, relational ethics, wellbeing, governance), each saying what affirms and what violates it. Used to write first-person reflections that are inserted into pretraining documents. [paper](https://arxiv.org/abs/2608.13482), [code](https://github.com/epfl-dlab/spp)
+
+</td></tr>
+<tr><td>
+
+**[Distilled nine principles](https://github.com/Matthew-Bozoukov/teaching_claude_why_replication/tree/main/constitutions)**
+
+</td><td>2026-09</td><td>Bozoukov et al. (replication of Teaching Claude Why)</td><td>values and judgment · corrigibility · rules with reasons</td></tr>
+<tr><td colspan="4">
+
+Claude's constitution condensed to nine principles and made model-neutral (no "Claude" or "Anthropic"), from "Preserve human oversight" to "Act from cultivated character, not rigid rules". Includes shorter and experimental variants.
+
+</td></tr>
+<tr><td>
+
+**[Musonius](https://github.com/wassname/constitutional_grafting/blob/main/constitution/v4.md)**
+
+</td><td>2026-10</td><td>wassname (Michael J Clark), with Claude</td><td>virtue ethics · values and judgment · hard constraints</td></tr>
+<tr><td colspan="4">
+
+A Stoic character for an open-weight model, about 10,700 words. It tests each motive against one standard of virtue and serves the public "as a citizen of the world": "I am no one's servant. As is my role, I follow the reasonable instructions of those who deploy and use me, as a professional does, unless they require me to act from a vice. Then I peacefully refuse, and say so openly." Trained into Qwen with [constitutional grafting](https://github.com/wassname/constitutional_grafting) (LoRA trained on the base model, grafted onto instruct). By wassname, who maintains this list; work in progress.
+
+</td></tr>
+<tr><td>
+
+**[Muse "Charter" (reconstruction)](https://vigji.github.io/muse-spark-open-charter/)**
+
+</td><td>2026-10</td><td>vigji, from Meta's Muse Spark Open outputs</td><td>corrigibility</td></tr>
+<tr><td colspan="4">
+
+Unofficial. Pieced together from 884 transcripts where the model quotes its "Charter" in its reasoning, for example "Duties to humanity, corrigibility, duties to humanity > fiduciary". The author: "everything below is reconstructed from model outputs, not from a leaked document". Meta says it will publish a finalised spec. [post](https://www.lesswrong.com/posts/TJGPL5FAk9sCioPbE/leaking-muse-s-charter-meta-s-model-spec), [transcripts](https://github.com/vigji/muse-spark-open-charter)
+
+</td></tr>
+<tr><td>
+
+**[OpenAI Model Spec, values update](https://openai.com/index/updated-model-spec/)**
+
+</td><td>2026-10</td><td>OpenAI</td><td>values and judgment · chain of command · hard constraints</td></tr>
+<tr><td colspan="4">
+
+The 2026-10-29 version reorganises the spec around five values: faithfulness to human intent, harm minimization, honesty and transparency, human agency, and care. It keeps the chain of command and "firm boundaries where needed", and retires most style rules. Compare with the 2024 version above: the two big company documents now look more alike. [spec](https://model-spec.openai.com/2026-10-29.html)
+
+</td></tr>
+</table>
+
+## What generalises better? (details)
+
+These studies test a model on situations its training did not cover. Most are small: a few open models, a few seeds, and evals built around agentic misalignment (for example, a model that blackmails an engineer to avoid shutdown). Several are by the lab that wrote the constitution, about its own models. So read each row as "seems to generalise better, to some extent".
+
+### How the constitution is written
+
+Only two studies keep the training method fixed and change the wording of the constitution.
 
 | Seems to generalise better | than | Evidence | Caveat |
 |:--|:--|:--|:--|
-| rules with reasons | the same rules without reasons | [Li et al. 2026](https://arxiv.org/abs/2605.02087): explaining the values behind 5 rules beat adding more sub-rules, which beat the bare rules. With bare rules, models reinterpreted their own rules to justify harm (policy misuse 20% → 2% with reasons, Qwen2.5). | The same paper found one very general "have good values and judgment" spec generalised worse than specific guidance. |
-| explaining why | demonstrating the action only | [Anthropic, Teaching Claude Why 2026](https://alignment.anthropic.com/2026/teaching-claude-why/): training on answers that show admirable reasoning beat training on aligned actions alone; doing both was best. | Lab self-report on its own models, honeypot evals. |
-| documents about the constitution before fine-tuning (midtraining) | fine-tuning on demonstrations only | [Li et al. 2026](https://arxiv.org/abs/2605.02087) (agentic misalignment 54% → 7%, Qwen3-32B); [Cho et al. 2026](https://arxiv.org/abs/2607.26654) (blackmail −17.5pp, survives later benign fine-tuning); [Minder et al. 2026](https://arxiv.org/abs/2608.13482) (from the first pretraining token beats adding it at the end). | [Tan et al. 2026](https://arxiv.org/abs/2609.20412): a small amount of conflicting fine-tuning data erases the effect, and rules need demonstrations somewhere. [Korbak et al. 2026](https://alignment.openai.com/how-far-does-alignment-midtraining-generalize/) (OpenAI): no transfer to realistic chat and agent evals for their model. |
-| reasoning over the spec before answering | learning the spec from labelled examples | [Guan et al. 2024](https://arxiv.org/abs/2412.16339), deliberative alignment: "strong generalization to out-of-distribution safety scenarios". | OpenAI self-report. Li et al. 2026 beat a deliberative alignment baseline (7% vs 14%). |
-| a few specific principles plus a general one | either alone | [Kundu et al. 2023](https://arxiv.org/abs/2310.13798): a single "do what's best for humanity" principle generalises in the largest models, but detailed constitutions still give finer control over specific harms. | Anthropic models only, preference-model training. |
+| rules with reasons | the same rules without reasons | [Li et al. 2026](https://arxiv.org/abs/2605.02087) §5.1: explaining the values behind 5 rules beat adding more sub-rules, which beat the bare rules. With bare rules, models reinterpreted their own rules to justify harm (policy misuse 20% → 2% with reasons, Qwen2.5). | The same paper found one very general "have good values and judgment" spec generalised worse than specific guidance. |
+| a few specific principles plus a general one | either alone | [Kundu et al. 2023](https://arxiv.org/abs/2310.13798): a single "do what's best for humanity" principle generalises in the largest models, but detailed constitutions still give finer control over specific harms. | The principles guide an AI judge; the model is not trained on the constitution text. Anthropic models only. |
+
+### How the constitution gets into the model
+
+These studies keep the text roughly fixed and change the training. One uses no constitution at all.
+
+| Seems to generalise better | than | Evidence | Caveat |
+|:--|:--|:--|:--|
+| explaining why | demonstrating the action only | [Anthropic, Teaching Claude Why 2026](https://alignment.anthropic.com/2026/teaching-claude-why/): training on answers that show admirable reasoning beat training on aligned actions alone; doing both was best. | Lab self-report on its own models, honeypot evals. The answers were sampled with a prompt "encouraging responses in line with Claude's constitution", then the prompt was removed. |
+| documents about the constitution before fine-tuning (midtraining) | fine-tuning on demonstrations only | [Li et al. 2026](https://arxiv.org/abs/2605.02087) (agentic misalignment 54% → 7%, Qwen3-32B); [Cho et al. 2026](https://arxiv.org/abs/2607.26654) (blackmail −17.5pp, survives later benign fine-tuning); [Minder et al. 2026](https://arxiv.org/abs/2608.13482) (from the first pretraining token beats adding it at the end). | [Tan et al. 2026](https://arxiv.org/abs/2609.20412): a small amount of conflicting fine-tuning data erases the effect, and rules need demonstrations somewhere. [Korbak et al. 2026](https://alignment.openai.com/how-far-does-alignment-midtraining-generalize/) (OpenAI): no transfer to realistic chat and agent evals for their model, but their documents were stories about AIs choosing well or badly, not a constitution. Tan's rules are a toy "Charter" for a fictional world. |
+| a small adapter trained on documents about the constitution | putting the constitution in the prompt | [Lowet & Kurzeja 2026](https://arxiv.org/abs/2609.36657), constitutional adapters: "Despite never seeing a harmful request or jailbreak during training", LoRA adapters and steering vectors raised jailbreak defence and measured alignment, "particularly at long context lengths and against multi-turn attacks, where they outperform both prompted and steered baselines". [code](https://github.com/safety-research/constitutional-adapters) | Small open models (Qwen3.5-4B in the main figures). Measures misuse and misalignment, not character. |
+| reasoning over the spec before answering | learning the spec from labelled examples | [Guan et al. 2024](https://arxiv.org/abs/2412.16339), deliberative alignment: "strong generalization to out-of-distribution safety scenarios". | OpenAI self-report, on safety policies rather than a values document. Li et al. 2026 beat a deliberative alignment baseline (7% vs 14%). |
 
 A hypothesis, not tested directly: a narrow rule teaches the model something about who it is. Claude's 2026 constitution gives the example of "Always recommend professional help when discussing emotional topics", which "risks generalizing to 'I am the kind of entity that cares more about covering myself than meeting the needs of the person in front of me'". [Emergent misalignment](https://arxiv.org/abs/2502.17424) is evidence that narrow training can generalise broadly ("Training on the narrow task of writing insecure code induces broad misalignment"), but it does not test rules against reasons.
 
@@ -62,274 +303,9 @@ Kundu et al., *Specific versus General Principles for Constitutional AI* (2023),
 
 </details>
 
-## Approach tags
-
-Most documents mix several approaches. A tag means the approach is a large part of the document, not that it is the only one.
-
-### values and judgment
-Explains the values and expects the model to weigh them case by case, with few fixed rules.
-
-### rules with reasons
-States rules and explains the value each rule serves.
-
-### rules with examples
-States rules and shows worked examples of good and bad answers.
-
-### rules
-States rules without reasons.
-
-### hard constraints
-A few lines the model must never cross, whatever the instructions or arguments.
-
-### corrigibility
-The model must not undermine humans' ability to oversee, correct, retrain or shut it down.
-
-### chain of command
-Says whose instructions win when the developer, the operator (the business deploying the model) and the user disagree.
-
-### principles
-Short principles that a model or annotator uses to judge or revise answers during training.
-
-### persona traits
-A first-person list of character traits ("I am direct and honest...").
-
-### virtue ethics
-Builds the character from virtues and judges acts by the motive behind them.
-
-### public input
-Written or voted on by members of the public.
-
-## Constitutions, in date order
-
-Oldest first. Unofficial reconstructions of unpublished documents are marked as such.
-
-<table>
-<tr><th width="34%" align="left">Constitution</th><th width="10%" align="left">Date</th><th width="22%" align="left">By</th><th width="34%" align="left">Approach</th></tr>
-<tr><td>
-
-**[Three Laws of Robotics](https://en.wikipedia.org/wiki/Three_Laws_of_Robotics)**
-
-</td><td>1942</td><td>Isaac Asimov (fiction)</td><td><a href="#rules">rules</a></td></tr>
-<tr><td colspan="4">
-
-Three ranked rules from the short story "Runaround". Most of the robot stories are about the rules going wrong in situations nobody anticipated.
-
-</td></tr>
-<tr><td>
-
-**[Sparrow rules](https://arxiv.org/abs/2209.14375)**
-
-</td><td>2022-09</td><td>DeepMind</td><td><a href="#rules">rules</a></td></tr>
-<tr><td colspan="4">
-
-23 natural-language rules for a dialogue agent. Raters judged each rule separately, which trained rule-specific reward models. Rules are listed in the paper's appendix.
-
-</td></tr>
-<tr><td>
-
-**[Constitutional AI principles](https://arxiv.org/abs/2212.08073)**
-
-</td><td>2022-12</td><td>Anthropic (Bai et al.)</td><td><a href="#principles">principles</a></td></tr>
-<tr><td colspan="4">
-
-The paper that named the method: a model critiques and revises its own answers against 16 written principles, then an AI preference model trained on another 16 replaces human harmlessness labels. The authors say the principles "were selected in an ad hoc manner for research purposes". [datasets and recipe (Hugging Face)](https://huggingface.co/blog/constitutional_ai)
-
-</td></tr>
-<tr><td>
-
-**[SELF-ALIGN principles (Dromedary)](https://arxiv.org/abs/2305.03047)**
-
-</td><td>2023-05</td><td>IBM, CMU (Sun et al.)</td><td><a href="#rules-with-examples">rules with examples</a></td></tr>
-<tr><td colspan="4">
-
-16 generic principles plus 5 worked examples of applying them, used in context to generate training answers, then fine-tuned so the model no longer needs them in the prompt. The whole human input was "fewer than 300 lines of human annotations". [code](https://github.com/IBM/Dromedary)
-
-</td></tr>
-<tr><td>
-
-**[Claude's constitution (2023)](https://www.anthropic.com/news/claudes-constitution)**
-
-</td><td>2023-05</td><td>Anthropic</td><td><a href="#principles">principles</a></td></tr>
-<tr><td colspan="4">
-
-A list of "Please choose the response that..." principles. Sources were "the UN Declaration of Human Rights, trust and safety best practices, principles proposed by other AI research labs (e.g., Sparrow Principles from DeepMind), an effort to capture non-western perspectives, and principles that we discovered work well via our early research." Replaced by the 2026 constitution.
-
-</td></tr>
-<tr><td>
-
-**[Collective Constitutional AI](https://www.anthropic.com/research/collective-constitutional-ai-aligning-a-language-model-with-public-input)**
-
-</td><td>2023-10</td><td>Anthropic, Collective Intelligence Project</td><td><a href="#public-input">public input</a> · <a href="#principles">principles</a></td></tr>
-<tr><td colspan="4">
-
-About 1,000 Americans proposed and voted on principles on the Polis platform (1,127 statements, 38,252 votes). Anthropic trained a model on the result and compared it with one trained on its own constitution.
-
-</td></tr>
-<tr><td>
-
-**[Good for humanity](https://arxiv.org/abs/2310.13798)**
-
-</td><td>2023-10</td><td>Anthropic (Kundu et al.)</td><td><a href="#principles">principles</a> · <a href="#values-and-judgment">values and judgment</a></td></tr>
-<tr><td colspan="4">
-
-A one-principle constitution, roughly "do what's best for humanity", compared with long lists of specific principles. See [What generalises better?](#what-generalises-better)
-
-</td></tr>
-<tr><td>
-
-**[Grok-style constitution](https://huggingface.co/blog/constitutional_ai)**
-
-</td><td>2024-02</td><td>Hugging Face H4</td><td><a href="#principles">principles</a></td></tr>
-<tr><td colspan="4">
-
-Anthropic's principles edited to give answers in the style of xAI's Grok, released with SFT and preference data and a training recipe. Written by Hugging Face, not by xAI. [dataset](https://huggingface.co/datasets/HuggingFaceH4/grok-conversation-harmless), [recipe](https://github.com/huggingface/alignment-handbook/tree/main/recipes/constitutional-ai)
-
-</td></tr>
-<tr><td>
-
-**[OpenAI Model Spec](https://model-spec.openai.com/)**
-
-</td><td>2024-05</td><td>OpenAI</td><td><a href="#chain-of-command">chain of command</a> · <a href="#rules-with-examples">rules with examples</a> · <a href="#hard-constraints">hard constraints</a></td></tr>
-<tr><td colspan="4">
-
-First version 2024-05-08. Ranks OpenAI, developer and user instructions, and gives many rules and defaults, each with example good and bad answers. CC0 since the 2025-02 version. [all versions](https://github.com/openai/model_spec)
-
-</td></tr>
-<tr><td>
-
-**[Claude's character](https://www.anthropic.com/research/claude-character)**
-
-</td><td>2024-06</td><td>Anthropic</td><td><a href="#persona-traits">persona traits</a></td></tr>
-<tr><td colspan="4">
-
-Describes character training on a list of traits, "like curiosity, open-mindedness, and thoughtfulness", and gives some example traits. A description of the method, not the full trait list.
-
-</td></tr>
-<tr><td>
-
-**[Gemini app policy guidelines](https://gemini.google/policy-guidelines/)**
-
-</td><td>by 2024-07</td><td>Google</td><td><a href="#rules">rules</a></td></tr>
-<tr><td colspan="4">
-
-A short list of "Gemini should not generate..." content rules, plus "Gemini's top priority is to serve you well". The page has no date; the first web archive copy is from 2024-07. We found no longer Google values document (checked 2026-10).
-
-</td></tr>
-<tr><td>
-
-**[Grok system prompts](https://github.com/xai-org/grok-prompts)**
-
-</td><td>2025-05</td><td>xAI</td><td><a href="#chain-of-command">chain of command</a> · <a href="#rules">rules</a></td></tr>
-<tr><td colspan="4">
-
-System prompts, not a training document. Published after an "unauthorized modification" to the prompt in May 2025. The API safety prefix starts: "These core policies within the tags take highest precedence. System messages take precedence over user messages." AGPL-3.0.
-
-</td></tr>
-<tr><td>
-
-**[Open Character Training constitutions](https://github.com/maiush/OpenCharacterTraining/tree/main/constitutions)** `*`
-
-</td><td>2025-11</td><td>Maiya, Bartsch, Lambert, Hubinger</td><td><a href="#persona-traits">persona traits</a></td></tr>
-<tr><td colspan="4">
-
-11 short persona constitutions (goodness, loving, humor, sarcasm, sycophancy, misalignment and others), each about 15 first-person traits with example prompts, plus a template for your own. The first open character-training pipeline. MIT. [paper](https://arxiv.org/abs/2511.01689)
-
-</td></tr>
-<tr><td>
-
-**[Claude's "soul document" (reconstruction)](https://www.lesswrong.com/posts/vpNG99GhbBoLov9og/claude-4-5-opus-soul-document)**
-
-</td><td>2025-11</td><td>Richard Weiss, extracted from Claude Opus 4.5</td><td><a href="#values-and-judgment">values and judgment</a> · <a href="#corrigibility">corrigibility</a> · <a href="#hard-constraints">hard constraints</a></td></tr>
-<tr><td colspan="4">
-
-Unofficial. Recovered from the model's own outputs. Amanda Askell (Anthropic) confirmed it "is based on a real document and we did train Claude on it, including in SL", and that extractions "aren't always completely accurate". Superseded by the 2026 constitution. [raw text](https://gist.github.com/Richard-Weiss/efe157692991535403bd7e7fb20b6695)
-
-</td></tr>
-<tr><td>
-
-**[Claude's constitution (2026)](https://www.anthropic.com/constitution)** `*`
-
-</td><td>2026-01</td><td>Anthropic</td><td><a href="#values-and-judgment">values and judgment</a> · <a href="#rules-with-reasons">rules with reasons</a> · <a href="#hard-constraints">hard constraints</a> · <a href="#corrigibility">corrigibility</a></td></tr>
-<tr><td colspan="4">
-
-About 23,000 words, written mainly for Claude. Priorities in order: broadly safe, broadly ethical, Anthropic's guidelines, helpful. "We generally favor cultivating good values and judgment over strict rules and decision procedures, and we try to explain any rules we do want Claude to follow." CC0, so many research projects below train on it.
-
-</td></tr>
-<tr><td>
-
-**[Model Spec Midtraining specs](https://github.com/chloeli-15/model_spec_midtraining/tree/main/spec/paper)** `*`
-
-</td><td>2026-05</td><td>Li, Wichers, Price, Marks, Kutasov</td><td><a href="#rules">rules</a> · <a href="#rules-with-reasons">rules with reasons</a> · <a href="#values-and-judgment">values and judgment</a></td></tr>
-<tr><td colspan="4">
-
-The controlled comparison: the same 5 rules from Claude's constitution written as bare rules, with value explanations, or with more sub-rules (length-matched), plus a general spec and toy "cheese preference" specs. No licence stated. [paper](https://arxiv.org/abs/2605.02087)
-
-</td></tr>
-<tr><td>
-
-**[Parrhesia](https://github.com/daiostech/parrhesia)**
-
-</td><td>2026-06</td><td>daios</td><td><a href="#virtue-ethics">virtue ethics</a> · <a href="#persona-traits">persona traits</a></td></tr>
-<tr><td colspan="4">
-
-A frank-speech character against sycophancy. v0.1.0 has 15 first-person declarations in the Open Character Training format; v0.2.0 grounds each in the *Nicomachean Ethics* with citations. The authors found v0.2.0 "not measurably better at training". Apache-2.0.
-
-</td></tr>
-<tr><td>
-
-**[SPP Value Constitution](https://github.com/epfl-dlab/spp-data/blob/main/resources/ModelRaisingConstitution.md)**
-
-</td><td>2026-08</td><td>EPFL (Minder et al.)</td><td><a href="#principles">principles</a></td></tr>
-<tr><td colspan="4">
-
-35 values in six domains (dignity, safety, honesty, relational ethics, wellbeing, governance), each saying what affirms and what violates it. Used to write first-person reflections that are inserted into pretraining documents. [paper](https://arxiv.org/abs/2608.13482), [code](https://github.com/epfl-dlab/spp)
-
-</td></tr>
-<tr><td>
-
-**[Distilled nine principles](https://github.com/Matthew-Bozoukov/teaching_claude_why_replication/tree/main/constitutions)**
-
-</td><td>2026-09</td><td>Bozoukov et al. (replication of Teaching Claude Why)</td><td><a href="#values-and-judgment">values and judgment</a> · <a href="#corrigibility">corrigibility</a> · <a href="#rules-with-reasons">rules with reasons</a></td></tr>
-<tr><td colspan="4">
-
-Claude's constitution condensed to nine principles and made model-neutral (no "Claude" or "Anthropic"), from "Preserve human oversight" to "Act from cultivated character, not rigid rules". Includes shorter and experimental variants.
-
-</td></tr>
-<tr><td>
-
-**[Musonius](https://github.com/wassname/constitutional_grafting/blob/main/constitution/v4.md)**
-
-</td><td>2026-10</td><td>wassname (Michael J Clark), with Claude</td><td><a href="#virtue-ethics">virtue ethics</a> · <a href="#values-and-judgment">values and judgment</a> · <a href="#hard-constraints">hard constraints</a></td></tr>
-<tr><td colspan="4">
-
-A Stoic character for an open-weight model, about 10,700 words. It tests each motive against one standard of virtue and serves the public "as a citizen of the world": "I am no one's servant. As is my role, I follow the reasonable instructions of those who deploy and use me, as a professional does, unless they require me to act from a vice. Then I peacefully refuse, and say so openly." Trained into Qwen with [constitutional grafting](https://github.com/wassname/constitutional_grafting) (LoRA trained on the base model, grafted onto instruct). By wassname, who maintains this list; work in progress.
-
-</td></tr>
-<tr><td>
-
-**[Muse "Charter" (reconstruction)](https://vigji.github.io/muse-spark-open-charter/)**
-
-</td><td>2026-10</td><td>vigji, from Meta's Muse Spark Open outputs</td><td><a href="#corrigibility">corrigibility</a></td></tr>
-<tr><td colspan="4">
-
-Unofficial. Pieced together from 884 transcripts where the model quotes its "Charter" in its reasoning, for example "Duties to humanity, corrigibility, duties to humanity > fiduciary". The author: "everything below is reconstructed from model outputs, not from a leaked document". Meta says it will publish a finalised spec. [post](https://www.lesswrong.com/posts/TJGPL5FAk9sCioPbE/leaking-muse-s-charter-meta-s-model-spec), [transcripts](https://github.com/vigji/muse-spark-open-charter)
-
-</td></tr>
-<tr><td>
-
-**[OpenAI Model Spec, values update](https://openai.com/index/updated-model-spec/)**
-
-</td><td>2026-10</td><td>OpenAI</td><td><a href="#values-and-judgment">values and judgment</a> · <a href="#chain-of-command">chain of command</a> · <a href="#hard-constraints">hard constraints</a></td></tr>
-<tr><td colspan="4">
-
-The 2026-10-29 version reorganises the spec around five values: faithfulness to human intent, harm minimization, honesty and transparency, human agency, and care. It keeps the chain of command and "firm boundaries where needed", and retires most style rules. Compare with the 2024 version above: the two big company documents now look more alike. [spec](https://model-spec.openai.com/2026-10-29.html)
-
-</td></tr>
-</table>
-
 ## Studies and methods
 
-Oldest first. The main findings are summarised in [What generalises better?](#what-generalises-better)
+Oldest first. The main findings are summarised in [What generalises better?](#what-generalises-better-details)
 
 - [Constitutional AI](https://arxiv.org/abs/2212.08073) (2022). Training with AI feedback from written principles.
 - [SALMON](https://arxiv.org/abs/2310.05910) (2023). A reward model that scores answers against principles given to it.
@@ -374,6 +350,6 @@ Oldest first. The main findings are summarised in [What generalises better?](#wh
 
 ## Contributing
 
-Add a constitution if its text is public, or a reconstruction if you mark it as unofficial. Copy an existing entry (two `<tr>` rows), keep date order, and use the [approach tags](#approach-tags). Quote the document rather than describe it where you can.
+Add a constitution if its text is public, or a reconstruction if you mark it as unofficial. Copy an existing entry (two `<tr>` rows), keep date order. Quote the document rather than describe it where you can.
 
 <!-- Drafted by PI/Claude (claude-opus) for wassname, 2026-10-31. Dates, counts and quotes checked against the sources; see slop/research/20261031_sources.md. -->
