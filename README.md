@@ -24,7 +24,11 @@ Oldest first. Unofficial reconstructions of unpublished documents are marked as 
 </td><td>1942</td><td>Isaac Asimov (fiction)</td><td>rules</td></tr>
 <tr><td colspan="4">
 
-Three ranked rules from the short story "Runaround".
+From the short story "Runaround", quoting the fictional *Handbook of Robotics, 56th Edition, 2058 A.D.*:
+
+> 1. A robot may not injure a human being or, through inaction, allow a human being to come to harm.
+> 2. A robot must obey the orders given it by human beings except where such orders would conflict with the First Law.
+> 3. A robot must protect its own existence as long as such protection does not conflict with the First or Second Law.
 
 </td></tr>
 <tr><td>
