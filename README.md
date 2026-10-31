@@ -4,12 +4,12 @@ AI constitutions and model specs: the written documents that say how a model sho
 
 > The idea is that human supervision will come entirely from a set of principles that should govern AI behavior, along with a small number of examples used for few-shot prompting. Together these principles form the constitution.
 
-Does the way a constitution is written matter? The few studies so far, all small ([details](#what-generalises-better-details)):
+Studies on what generalises ([quotes](#quotes-from-the-studies)):
 
-- Rules with reasons beat bare rules, but a very general "good values and judgment" spec did worse than specific guidance ([Li 2026](https://arxiv.org/abs/2605.02087)).
-- One general principle generalises in large models; specific ones give finer control ([Kundu 2023](https://arxiv.org/abs/2310.13798)).
-- Training on reasons beats training on demonstrations alone ([Teaching Claude Why 2026](https://alignment.anthropic.com/2026/teaching-claude-why/)).
-- Training on documents about the constitution helps ([Li 2026](https://arxiv.org/abs/2605.02087), [Cho 2026](https://arxiv.org/abs/2607.26654)), but is fragile ([Tan 2026](https://arxiv.org/abs/2609.20412)).
+- [Li 2026](https://arxiv.org/abs/2605.02087): "both augmentations improve generalization over the rules baseline, with value explanations providing more consistent gains than subrules"; "A very general spec about 'having good values and judgment' leads to worse generalization than including more specific guidance."
+- [Kundu 2023](https://arxiv.org/abs/2310.13798): "more detailed constitutions still improve fine-grained control over specific types of harms."
+- [Teaching Claude Why 2026](https://alignment.anthropic.com/2026/teaching-claude-why/): "teaching the principles underlying aligned behavior can be more effective than training on demonstrations of aligned behavior alone."
+- [Tan 2026](https://arxiv.org/abs/2609.20412): "a tiny fraction of finetuning data which suggests a competing motivation erases the effects of alignment midtraining."
 
 ## Constitutions, in date order
 
@@ -24,7 +24,7 @@ Oldest first. Unofficial reconstructions of unpublished documents are marked as 
 </td><td>1942</td><td>Isaac Asimov (fiction)</td><td>rules</td></tr>
 <tr><td colspan="4">
 
-Three ranked rules from the short story "Runaround". Most of the robot stories are about the rules going wrong in situations nobody anticipated.
+Three ranked rules from the short story "Runaround".
 
 </td></tr>
 <tr><td>
@@ -88,7 +88,7 @@ About 1,000 Americans proposed and voted on principles on the Polis platform (1,
 </td><td>2023-10</td><td>Anthropic (Kundu et al.)</td><td>principles · values and judgment</td></tr>
 <tr><td colspan="4">
 
-A one-principle constitution, roughly "do what's best for humanity", compared with long lists of specific principles. See [What generalises better?](#what-generalises-better-details)
+A one-principle constitution, roughly "do what's best for humanity", compared with long lists of specific principles.
 
 </td></tr>
 <tr><td>
@@ -238,40 +238,12 @@ Unofficial. Pieced together from 884 transcripts where the model quotes its "Cha
 </td><td>2026-10</td><td>OpenAI</td><td>values and judgment · chain of command · hard constraints</td></tr>
 <tr><td colspan="4">
 
-The 2026-10-29 version reorganises the spec around five values: faithfulness to human intent, harm minimization, honesty and transparency, human agency, and care. It keeps the chain of command and "firm boundaries where needed", and retires most style rules. Compare with the 2024 version above: the two big company documents now look more alike. [spec](https://model-spec.openai.com/2026-10-29.html)
+The 2026-10-29 version reorganises the spec around five values: faithfulness to human intent, harm minimization, honesty and transparency, human agency, and care. It keeps the chain of command and "firm boundaries where needed", and retires most style rules. [spec](https://model-spec.openai.com/2026-10-29.html)
 
 </td></tr>
 </table>
 
-## What generalises better? (details)
-
-These studies test a model on situations its training did not cover. Most are small: a few open models, a few seeds, and evals built around agentic misalignment (for example, a model that blackmails an engineer to avoid shutdown). Several are by the lab that wrote the constitution, about its own models. So read each row as "seems to generalise better, to some extent".
-
-### How the constitution is written
-
-Only two studies keep the training method fixed and change the wording of the constitution.
-
-| Seems to generalise better | than | Evidence | Caveat |
-|:--|:--|:--|:--|
-| rules with reasons | the same rules without reasons | [Li et al. 2026](https://arxiv.org/abs/2605.02087) §5.1: explaining the values behind 5 rules beat adding more sub-rules, which beat the bare rules. With bare rules, models reinterpreted their own rules to justify harm (policy misuse 20% → 2% with reasons, Qwen2.5). | The same paper found one very general "have good values and judgment" spec generalised worse than specific guidance. |
-| a few specific principles plus a general one | either alone | [Kundu et al. 2023](https://arxiv.org/abs/2310.13798): a single "do what's best for humanity" principle generalises in the largest models, but detailed constitutions still give finer control over specific harms. | The principles guide an AI judge; the model is not trained on the constitution text. Anthropic models only. |
-
-### How the constitution gets into the model
-
-These studies keep the text roughly fixed and change the training. One uses no constitution at all.
-
-| Seems to generalise better | than | Evidence | Caveat |
-|:--|:--|:--|:--|
-| explaining why | demonstrating the action only | [Anthropic, Teaching Claude Why 2026](https://alignment.anthropic.com/2026/teaching-claude-why/): training on answers that show admirable reasoning beat training on aligned actions alone; doing both was best. | Lab self-report on its own models, honeypot evals. The answers were sampled with a prompt "encouraging responses in line with Claude's constitution", then the prompt was removed. |
-| documents about the constitution before fine-tuning (midtraining) | fine-tuning on demonstrations only | [Li et al. 2026](https://arxiv.org/abs/2605.02087) (agentic misalignment 54% → 7%, Qwen3-32B); [Cho et al. 2026](https://arxiv.org/abs/2607.26654) (blackmail −17.5pp, survives later benign fine-tuning); [Minder et al. 2026](https://arxiv.org/abs/2608.13482) (from the first pretraining token beats adding it at the end). | [Tan et al. 2026](https://arxiv.org/abs/2609.20412): a small amount of conflicting fine-tuning data erases the effect, and rules need demonstrations somewhere. [Korbak et al. 2026](https://alignment.openai.com/how-far-does-alignment-midtraining-generalize/) (OpenAI): no transfer to realistic chat and agent evals for their model, but their documents were stories about AIs choosing well or badly, not a constitution. Tan's rules are a toy "Charter" for a fictional world. |
-| a small adapter trained on documents about the constitution | putting the constitution in the prompt | [Lowet & Kurzeja 2026](https://arxiv.org/abs/2609.36657), constitutional adapters: "Despite never seeing a harmful request or jailbreak during training", LoRA adapters and steering vectors raised jailbreak defence and measured alignment, "particularly at long context lengths and against multi-turn attacks, where they outperform both prompted and steered baselines". [code](https://github.com/safety-research/constitutional-adapters) | Small open models (Qwen3.5-4B in the main figures). Measures misuse and misalignment, not character. |
-| reasoning over the spec before answering | learning the spec from labelled examples | [Guan et al. 2024](https://arxiv.org/abs/2412.16339), deliberative alignment: "strong generalization to out-of-distribution safety scenarios". | OpenAI self-report, on safety policies rather than a values document. Li et al. 2026 beat a deliberative alignment baseline (7% vs 14%). |
-
-A hypothesis, not tested directly: a narrow rule teaches the model something about who it is. Claude's 2026 constitution gives the example of "Always recommend professional help when discussing emotional topics", which "risks generalizing to 'I am the kind of entity that cares more about covering myself than meeting the needs of the person in front of me'". [Emergent misalignment](https://arxiv.org/abs/2502.17424) is evidence that narrow training can generalise broadly ("Training on the narrow task of writing insecure code induces broad misalignment"), but it does not test rules against reasons.
-
-Do models then follow their constitution? An external audit ([2605.24229](https://arxiv.org/abs/2605.24229)) found violation rates on Claude's constitution fell from 15.0% (Sonnet 4) to 2.0% (Sonnet 4.6), and on OpenAI's Model Spec from 11.7% (GPT-4o) to 3.6% (GPT-5.2), but "We cannot externally isolate whether these gains come from specification-specific training, broader post-training improvements, or evaluation awareness."
-
-<details><summary>Quotes from the main studies</summary>
+## Quotes from the studies
 
 Li et al., *Model Spec Midtraining* (2026), [§5.1](https://arxiv.org/html/2605.02087v2):
 
@@ -301,11 +273,21 @@ Kundu et al., *Specific versus General Principles for Constitutional AI* (2023),
 
 > We find that the largest dialogue models can generalize from this short constitution, resulting in harmless assistants with no stated interest in specific motivations like power. A general principle may thus partially avoid the need for a long list of constitutions targeting potentially harmful behaviors. **However, more detailed constitutions still improve fine-grained control over specific types of harms.**
 
-</details>
+Lowet & Kurzeja, *Constitutional adapters* (2026), abstract:
+
+> Despite never seeing a harmful request or jailbreak during training, such objects increase jailbreak defense success and measured alignment—particularly at long context lengths and against multi-turn attacks, where they outperform both prompted and steered baselines.
+
+Guan et al., *Deliberative Alignment* (2024), abstract:
+
+> Furthermore, we find that deliberative alignment enables strong generalization to out-of-distribution safety scenarios.
+
+*How Well Do Models Follow Their Constitutions?* (2026), abstract:
+
+> On Anthropic's constitution, the Claude family falls from a 15.0% violation rate (Sonnet 4 [...]) to 2.0% (Sonnet 4.6); on OpenAI's Model Spec, the GPT family falls from 11.7% (GPT-4o [...]) to 3.6% (GPT-5.2 medium reasoning) [...]. We cannot externally isolate whether these gains come from specification-specific training, broader post-training improvements, or evaluation awareness.
 
 ## Studies and methods
 
-Oldest first. The main findings are summarised in [What generalises better?](#what-generalises-better-details)
+Oldest first.
 
 - [Constitutional AI](https://arxiv.org/abs/2212.08073) (2022). Training with AI feedback from written principles.
 - [SALMON](https://arxiv.org/abs/2310.05910) (2023). A reward model that scores answers against principles given to it.
