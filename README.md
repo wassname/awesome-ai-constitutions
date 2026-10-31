@@ -3,7 +3,7 @@
 
 ## What is an AI constitution?
 
-An AI constitution is a human-readable document that shapes an AI's values and behaviour **during training**. Often this works through self-reflection: the model writes, judges or reflects on its own answers with the document in mind, and is then trained on the result. So the values become part of the model as it develops. Some constitutions are written to the model ("Claude should..."); character documents are often in the model's own voice ("I am..."). OpenAI calls the same kind of document a model spec.
+An AI constitution is a human-readable document that shapes an AI's values and behaviour **during training**. This usually works through reflection: the model, or people, write, judge or reflect on answers with the document in mind, and the model is then trained on the result. So the values become part of the model as it develops. Some constitutions are written to the model ("Claude should..."); character documents are often in the model's own voice ("I am..."). OpenAI calls the same kind of document a model spec.
 
 This is different from instructions given to a finished model each time it runs (a system prompt).
 
