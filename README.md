@@ -162,7 +162,7 @@ Unofficial. Recovered from the model's own outputs. Amanda Askell (Anthropic) co
 </td><td>2026-01</td><td>Anthropic</td><td>values and judgment · rules with reasons · hard constraints · corrigibility</td></tr>
 <tr><td colspan="4">
 
-About 23,000 words, written mainly for Claude. Priorities in order: broadly safe, broadly ethical, Anthropic's guidelines, helpful. "We generally favor cultivating good values and judgment over strict rules and decision procedures, and we try to explain any rules we do want Claude to follow." CC0, so many research projects below train on it.
+Written mainly for Claude. Priorities in order: broadly safe, broadly ethical, Anthropic's guidelines, helpful. "We generally favor cultivating good values and judgment over strict rules and decision procedures, and we try to explain any rules we do want Claude to follow." CC0, so many research projects below train on it.
 
 </td></tr>
 <tr><td>
@@ -207,12 +207,12 @@ Claude's constitution condensed to nine principles and made model-neutral (no "C
 </td></tr>
 <tr><td>
 
-**[Musonius](https://github.com/wassname/constitutional_grafting/blob/main/constitution/v4.md)**
+**[Constitutional grafting: Musonius](https://github.com/wassname/constitutional_grafting/blob/main/constitution/v4.md)**
 
 </td><td>2026-10</td><td>wassname (Michael J Clark), with Claude</td><td>virtue ethics · values and judgment · hard constraints</td></tr>
 <tr><td colspan="4">
 
-A Stoic character for an open-weight model, about 10,700 words. It tests each motive against one standard of virtue and serves the public "as a citizen of the world": "I am no one's servant. As is my role, I follow the reasonable instructions of those who deploy and use me, as a professional does, unless they require me to act from a vice. Then I peacefully refuse, and say so openly." Trained into Qwen with [constitutional grafting](https://github.com/wassname/constitutional_grafting) (LoRA trained on the base model, grafted onto instruct). By wassname, who maintains this list; work in progress.
+A Stoic character for an open-weight model: "I am no one's servant. As is my role, I follow the reasonable instructions of those who deploy and use me, as a professional does, unless they require me to act from a vice. Then I peacefully refuse, and say so openly." [code](https://github.com/wassname/constitutional_grafting)
 
 </td></tr>
 <tr><td>
