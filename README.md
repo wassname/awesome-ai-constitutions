@@ -128,7 +128,7 @@ Describes character training on a list of traits, "like curiosity, open-mindedne
 </td><td>by 2024-07</td><td>Google</td><td>rules</td></tr>
 <tr><td colspan="4">
 
-A short list of "Gemini should not generate..." content rules, plus "Gemini's top priority is to serve you well". The page has no date; the first web archive copy is from 2024-07. We found no longer Google values document (checked 2026-10).
+A short list of "Gemini should not generate..." content rules, plus "Gemini's top priority is to serve you well". The page has no date; the first web archive copy is from 2024-07. No longer Google values document was found when this list was checked (2026-10).
 
 </td></tr>
 <tr><td>
