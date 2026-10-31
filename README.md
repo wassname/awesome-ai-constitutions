@@ -133,16 +133,6 @@ A short list of "Gemini should not generate..." content rules, plus "Gemini's to
 </td></tr>
 <tr><td>
 
-**[Grok system prompts](https://github.com/xai-org/grok-prompts)**
-
-</td><td>2025-05</td><td>xAI</td><td>chain of command · rules</td></tr>
-<tr><td colspan="4">
-
-System prompts, not a training document. Published after an "unauthorized modification" to the prompt in May 2025. The API safety prefix starts: "These core policies within the tags take highest precedence. System messages take precedence over user messages." AGPL-3.0.
-
-</td></tr>
-<tr><td>
-
 **[Open Character Training constitutions](https://github.com/maiush/OpenCharacterTraining/tree/main/constitutions)** `*`
 
 </td><td>2025-11</td><td>Maiya, Bartsch, Lambert, Hubinger</td><td>persona traits</td></tr>
@@ -323,7 +313,7 @@ Oldest first.
 
 - [awesome-moral-evals](https://github.com/wassname/awesome-moral-evals). Datasets for testing whether a constitution changed a model's moral behaviour.
 - [awesome-interpretability](https://github.com/wassname/awesome-interpretability).
-- Leaked and published system prompts: [asgeirtj/system_prompts_leaks](https://github.com/asgeirtj/system_prompts_leaks), [x1xhlol/system-prompts-and-models-of-ai-tools](https://github.com/x1xhlol/system-prompts-and-models-of-ai-tools), [jujumilk3/leaked-system-prompts](https://github.com/jujumilk3/leaked-system-prompts), [Anthropic's published system prompts](https://docs.anthropic.com/en/release-notes/system-prompts).
+- Leaked and published system prompts: [asgeirtj/system_prompts_leaks](https://github.com/asgeirtj/system_prompts_leaks), [x1xhlol/system-prompts-and-models-of-ai-tools](https://github.com/x1xhlol/system-prompts-and-models-of-ai-tools), [jujumilk3/leaked-system-prompts](https://github.com/jujumilk3/leaked-system-prompts), [Anthropic's published system prompts](https://docs.anthropic.com/en/release-notes/system-prompts), [xAI's published Grok prompts](https://github.com/xai-org/grok-prompts).
 - [Model Commons](https://www.modelcommons.org/). Full text of Claude's constitution and the OpenAI Model Spec, open to comments on each clause.
 - [Ctrl AI: what the AI companies published](https://ctrlai.com/say/read). Company safety frameworks, system cards and specs.
 - [Constitutional-AI-awesome-papers](https://github.com/minbeomkim/Constitutional-AI-awesome-papers). Earlier paper list, last updated 2024.
